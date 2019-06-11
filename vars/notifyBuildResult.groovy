@@ -1,11 +1,11 @@
 import groovy.json.JsonOutput
 
-def call(
-    def String buildStatus,
-    def String channel,
-    def String pretext = null
-) {
-    buildStatus = buildStatus ?: 'SUCCESS'
+def call(args) {
+
+
+    buildStatus = args.buildStatus ?: 'SUCCESS'
+    channel = args.channel
+    pretext = args.pretext
 
     // Override default values based on build status
     if (buildStatus == 'SUCCESS') {
