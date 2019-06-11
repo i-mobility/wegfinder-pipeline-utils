@@ -1,9 +1,9 @@
 import groovy.json.JsonOutput
 
 def call(
-    String buildStatus,
-    String channel,
-    String pretext = null
+    def String buildStatus,
+    def String channel,
+    def String pretext = null
 ) {
     buildStatus = buildStatus ?: 'SUCCESS'
 
