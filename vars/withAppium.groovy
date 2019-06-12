@@ -9,9 +9,13 @@ def call(String script) {
 	    )
 	}
 
-	sh """#!/bin/bash -l
+	lock("appium-${env.NODE_NAME}") {
 
-	./scripts/wrappium.sh ${script}
-	"""
+        sh """#!/bin/bash -l
+
+		./scripts/wrappium.sh ${script}
+		"""
+    }
+
 
 }
