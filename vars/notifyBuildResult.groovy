@@ -23,19 +23,7 @@ def call(args) {
 
     def branch = env.CHANGE_BRANCH ?: env.GIT_BRANCH
 
-    if (env.CHANGE_BRANCH) {
-        buildType = "Pull Request"
-    } else if (params.NIGHTLY == 'YES') {
-        buildType = "Nightly"
-    } else if (isSCM) {
-        buildType = "GIT Push"
-    } else if (isUser) {
-        buildType = "Manually Triggered"
-    } else {
-        buildType = "Unkown trigger"
-    }
-
-    def title = "${buildStatus}: ${buildType} ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+    def title = "${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
 
     def attachments = JsonOutput.toJson([
         [
@@ -57,6 +45,11 @@ def call(args) {
                 ],
                 [
                     title: "trigger",
+                    value: currentBuild.rawBuild.getCauses().first().getShortDescription(),
+                    short: false
+                ],
+                [
+                    title: "trigger-class",
                     value: currentBuild.rawBuild.getCauses().toString(),
                     short: false
                 ]
