@@ -18,11 +18,6 @@ def call(args) {
 
     def buildType = "Unkown"
 
-    currentBuild.rawBuild.getCauses().each {
-        echo("${it.getShortDescription()}")
-        echo("${it.toString()}")
-    }
-
     def isSCM = currentBuild.rawBuild.getCause(hudson.triggers.SCMTrigger$SCMTriggerCause) != null
     def isUser = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause) != null
 
@@ -58,6 +53,11 @@ def call(args) {
                 [
                     title: "details",
                     value: env.RUN_DISPLAY_URL,
+                    short: false
+                ],
+                [
+                    title: "trigger",
+                    value: currentBuild.rawBuild.getCauses().toString(),
                     short: false
                 ]
             ]
