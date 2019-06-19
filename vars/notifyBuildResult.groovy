@@ -47,11 +47,6 @@ def call(args) {
                     title: "trigger",
                     value: currentBuild.rawBuild.getCauses().first().getShortDescription(),
                     short: false
-                ],
-                [
-                    title: "trigger-class",
-                    value: currentBuild.rawBuild.getCauses().toString(),
-                    short: false
                 ]
             ]
         ]
