@@ -1,4 +1,5 @@
 import groovy.json.JsonOutput
+import hudson.tasks.test.AbstractTestResultAction
 
 def call(args) {
 
