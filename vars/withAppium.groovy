@@ -17,5 +17,4 @@ def call(String script) {
 		"""
     }
 
-
 }
