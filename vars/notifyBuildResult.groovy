@@ -22,7 +22,8 @@ def call(args) {
     def isSCM = currentBuild.rawBuild.getCause(hudson.triggers.SCMTrigger$SCMTriggerCause) != null
     def isUser = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause) != null
 
-    def branch = env.CHANGE_BRANCH ?: env.GIT_BRANCH
+    def branchName = env.CHANGE_BRANCH ?: env.GIT_BRANCH
+    def branchURL = env.CHANGE_URL
 
     def title = "${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
 
@@ -37,11 +38,22 @@ def call(args) {
         def skipped = testResultAction.skipCount
         def passed = total - failed - skipped
 
-        failedTests = "${testResultAction.getFailedTests()}"
+
+        if (!testResultAction.getFailedTests().isEmpty()) {}
+           failedTests = testResultAction.getFailedTests().map { it.getName() }.join("\n")
+        }
 
         testStatus = "Passed: ${passed}, Failed: ${failed} ${testResultAction.failureDiffString}, Skipped: ${skipped}"
     }
     testResultAction = null
+
+    def fields = []
+
+    def branchField = branchName
+
+    if (branchURL != null) {
+        branchField = "<${branchURL}|${branchName}>"
+    } 
 
     def attachments = JsonOutput.toJson([
         [
@@ -52,19 +64,19 @@ def call(args) {
             title_link: env.RUN_DISPLAY_URL,
             fields: [
                 [
-                    title: "branch",
-                    value: branch,
-                    short: false
+                    title: "github",
+                    value: branchField,
+                    short: true
                 ],
                 [
-                    title: "details",
-                    value: env.RUN_DISPLAY_URL,
+                    title: "jenkins",
+                    value: "<${env.RUN_DISPLAY_URL}|${env.JOB_NAME}>",
                     short: false
                 ],
                 [
                     title: "trigger",
                     value: currentBuild.rawBuild.getCauses().first().getShortDescription(),
-                    short: false
+                    short: true
                 ],
                 [
                     title: "test-status",
