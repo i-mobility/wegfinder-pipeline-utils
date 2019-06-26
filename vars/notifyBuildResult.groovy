@@ -39,7 +39,7 @@ def call(args) {
         def passed = total - failed - skipped
 
 
-        if (!testResultAction.getFailedTests().isEmpty()) {}
+        if (!testResultAction.getFailedTests().isEmpty()) {
            failedTests = testResultAction.getFailedTests().map { it.getName() }.join("\n")
         }
 
