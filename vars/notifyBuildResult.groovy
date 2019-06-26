@@ -37,7 +37,7 @@ def call(args) {
         def skipped = testResultAction.skipCount
         def passed = total - failed - skipped
 
-        failedTests = "${result.getFailedTests()}"
+        failedTests = "${testResultAction.getFailedTests()}"
 
         testStatus = "Passed: ${passed}, Failed: ${failed} ${testResultAction.failureDiffString}, Skipped: ${skipped}"
     }
