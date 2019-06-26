@@ -25,6 +25,23 @@ def call(args) {
 
     def title = "${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
 
+
+    def testStatus = "-"
+    def failedTests = "-"
+
+    AbstractTestResultAction testResultAction = currentBuild.rawBuild.getAction(AbstractTestResultAction.class)
+    if (testResultAction != null) {
+        def total = testResultAction.totalCount
+        def failed = testResultAction.failCount
+        def skipped = testResultAction.skipCount
+        def passed = total - failed - skipped
+
+        failedTests = "${result.getFailedTests()}"
+
+        testStatus = "Passed: ${passed}, Failed: ${failed} ${testResultAction.failureDiffString}, Skipped: ${skipped}"
+    }
+    testResultAction = null
+
     def attachments = JsonOutput.toJson([
         [
             fallback: title,
@@ -46,6 +63,16 @@ def call(args) {
                 [
                     title: "trigger",
                     value: currentBuild.rawBuild.getCauses().first().getShortDescription(),
+                    short: false
+                ],
+                [
+                    title: "test-status",
+                    value: testStatus,
+                    short: false
+                ],
+                [
+                    title: "failed-tests",
+                    value: failedTests,
                     short: false
                 ]
             ]
