@@ -39,8 +39,16 @@ def call(args) {
         def passed = total - failed - skipped
 
 
-        if (!testResultAction.getFailedTests().isEmpty()) {
-           failedTests = testResultAction.getFailedTests().map { it.getName() }.join("\n")
+        def failedTestsArray = []
+
+        if (testResultAction.failedTests != null) {
+            for(element in testResultAction.failedTests) {
+                failedTests << element.getName()
+            }
+        }
+
+        if (!failedTestsArray.isEmpty()) {
+            failedTests = testResultAction.getFailedTests().map { it.getName() }.join("\n")
         }
 
         testStatus = "Passed: ${passed}, Failed: ${failed} ${testResultAction.failureDiffString}, Skipped: ${skipped}"
