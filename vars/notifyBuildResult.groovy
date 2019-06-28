@@ -17,11 +17,6 @@ def call(args) {
         colorCode = 'danger'
     }
 
-    def buildType = "Unkown"
-
-    def isSCM = currentBuild.rawBuild.getCause(hudson.triggers.SCMTrigger$SCMTriggerCause) != null
-    def isUser = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause) != null
-
     def branchName = env.CHANGE_BRANCH ?: env.GIT_BRANCH
     def branchURL = env.CHANGE_URL
 
@@ -66,13 +61,18 @@ def call(args) {
     }
     testResultAction = null
 
-    def fields = []
 
     def branchField = branchName
 
     if (branchURL != null) {
         branchField = "<${branchURL}|${branchName}>"
-    } 
+    }
+
+    def buildTrigger = currentBuild.rawBuild.getCauses().first().getShortDescription()
+
+    if (params.NIGHTLY == 'YES') {
+        buildTrigger = "Nightly"
+    }
 
     def attachments = JsonOutput.toJson([
         [
