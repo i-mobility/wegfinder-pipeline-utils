@@ -32,6 +32,8 @@ def call(args) {
     def failedTests = "-"
 
     AbstractTestResultAction testResultAction = currentBuild.rawBuild.getAction(AbstractTestResultAction.class)
+
+    echo "${testResultAction}"
     if (testResultAction != null) {
         def total = testResultAction.totalCount
         def failed = testResultAction.failCount
@@ -39,17 +41,26 @@ def call(args) {
         def passed = total - failed - skipped
 
 
+        echo "total: ${total}"
+        echo "failed: ${failed}"
+        echo "skipped: ${skipped}"
+        echo "passed: ${passed}"
+
+
         def failedTestsArray = []
 
-        if (testResultAction.failedTests != null) {
-            for(element in testResultAction.failedTests) {
-                failedTests << element.getName()
+        echo "failed tests: ${testResultAction.getFailedTests()}"
+        if (testResultAction.getFailedTests() != null) {
+            for(element in testResultAction.getFailedTests()) {
+                failedTestsArray << element.getName()
             }
         }
 
         if (!failedTestsArray.isEmpty()) {
             failedTests = failedTestsArray.join("\n")
         }
+
+        echo "failedTestsArray: ${failedTestsArray}"
 
         testStatus = "Passed: ${passed}, Failed: ${failed} ${testResultAction.failureDiffString}, Skipped: ${skipped}"
     }
