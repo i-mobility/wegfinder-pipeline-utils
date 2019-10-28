@@ -1,7 +1,7 @@
 
 def call(Closure closure = {}) {
 	sh '''#!/bin/bash -l
-	rvm use 2.3.3
+	rvm use 2.5.1
 	'''
 
 	sh '''#!/bin/bash -l
