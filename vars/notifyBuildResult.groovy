@@ -7,6 +7,10 @@ def call(args) {
     buildStatus = args.buildStatus ?: 'SUCCESS'
     channel = args.channel
     pretext = args.pretext
+    artifacts = "-"
+    if (args.artifacts != null) {
+        artifacts = "<${env.BUILD_URL}/artifact/${args.artifacts}|Artfifacts>"
+    }
 
     // Override default values based on build status
     if (buildStatus == 'SUCCESS') {
@@ -90,6 +94,11 @@ def call(args) {
                 [
                     title: "jenkins",
                     value: "<${env.RUN_DISPLAY_URL}|${env.JOB_NAME}>",
+                    short: false
+                ],
+                [
+                    title: "artifacts",
+                    value: "${artifacts}",
                     short: false
                 ],
                 [
