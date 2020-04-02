@@ -9,7 +9,7 @@ def call(args) {
     pretext = args.pretext
     artifacts = "-"
     if (args.artifacts != null) {
-        artifacts = "<${env.BUILD_URL}/artifact/${args.artifacts}|Artfifacts>"
+        artifacts = "<${env.BUILD_URL}/artifact/${args.artifacts}|Artifacts>"
     }
 
     // Override default values based on build status
