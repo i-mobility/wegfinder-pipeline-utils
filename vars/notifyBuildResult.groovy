@@ -24,7 +24,7 @@ def call(args) {
     def branchName = env.CHANGE_BRANCH ?: env.GIT_BRANCH
     def branchURL = env.CHANGE_URL
 
-    def title = "${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+    def title = "${buildStatus}: ${branchName} #${env.BUILD_NUMBER}"
 
 
     def testStatus = "-"
@@ -32,23 +32,14 @@ def call(args) {
 
     AbstractTestResultAction testResultAction = currentBuild.rawBuild.getAction(AbstractTestResultAction.class)
 
-    echo "${testResultAction}"
     if (testResultAction != null) {
         def total = testResultAction.totalCount
         def failed = testResultAction.failCount
         def skipped = testResultAction.skipCount
         def passed = total - failed - skipped
 
-
-        echo "total: ${total}"
-        echo "failed: ${failed}"
-        echo "skipped: ${skipped}"
-        echo "passed: ${passed}"
-
-
         def failedTestsArray = []
 
-        echo "failed tests: ${testResultAction.getFailedTests()}"
         if (testResultAction.getFailedTests() != null) {
             for(element in testResultAction.getFailedTests()) {
                 failedTestsArray << element.getName()
@@ -58,8 +49,6 @@ def call(args) {
         if (!failedTestsArray.isEmpty()) {
             failedTests = failedTestsArray.join("\n")
         }
-
-        echo "failedTestsArray: ${failedTestsArray}"
 
         testStatus = "Passed: ${passed}, Failed: ${failed} ${testResultAction.failureDiffString}, Skipped: ${skipped}"
     }
